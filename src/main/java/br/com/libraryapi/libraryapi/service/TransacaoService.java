@@ -32,8 +32,6 @@ public class TransacaoService {
 
         livro.setDataPublicacao(LocalDate.of(2024,6,1));
 
-
-
 //        livroRepository.save(livro);
     }
 

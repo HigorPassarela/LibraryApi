@@ -108,8 +108,8 @@ public class Livro {
                 ", dataPublicacao=" + dataPublicacao +
                 ", genero=" + genero +
                 ", preco=" + preco +
-//                ", autor=" + autor +
-                ", autor=" + autor + (autor != null ? autor.getNome() : null) + '\'' +
+                ", autor=" + autor +
+//                ", autor=" + autor + (autor != null ? autor.getNome() : null) + '\'' +
                 '}';
     }
 }
