@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
-@Transactional
+//@Transactional
 class LivroRepositoryTest {
 
     @Autowired
@@ -29,12 +29,12 @@ class LivroRepositoryTest {
         Livro livro = new Livro();
         livro.setIsbn("90902913-293103");
         livro.setPreco(BigDecimal.valueOf(100));
-        livro.setGenero(GeneroLivro.FICCAO);
-        livro.setTitulo("UFO");
+        livro.setGenero(GeneroLivro.CIENCIA);
+        livro.setTitulo("Ciências");
         livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
 
         Autor autor = autorRepository
-                .findById(UUID.fromString("91730da9-b9e4-4953-8efb-9ba9bb95bd53"))
+                .findById(UUID.fromString("7fe08717-e623-448a-9181-033c8980b40b"))
                 .orElse(null);
 
         livro.setAutor(autor);
@@ -45,16 +45,16 @@ class LivroRepositoryTest {
     @Test
     void salvarAutorELivroTeste() {
         Livro livro = new Livro();
-        livro.setIsbn("90902913-293103");
-        livro.setPreco(BigDecimal.valueOf(100));
-        livro.setGenero(GeneroLivro.FICCAO);
-        livro.setTitulo("Terceiro Livro");
-        livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
+        livro.setIsbn("989012-111111");
+        livro.setPreco(BigDecimal.valueOf(180));
+        livro.setGenero(GeneroLivro.CIENCIA);
+        livro.setTitulo("Ciencia Humana");
+        livro.setDataPublicacao(LocalDate.of(1956, 5, 8));
 
         Autor autor = new Autor();
         autor.setNome("Pedro");
         autor.setNacionalidade("Brasileira");
-        autor.setDataNascimento(LocalDate.of(1969, 2, 20));
+        autor.setDataNascimento(LocalDate.of(1930, 10, 20));
 
         autorRepository.save(autor);
 
@@ -66,16 +66,16 @@ class LivroRepositoryTest {
     @Test
     void salvarCascateTeste() {
         Livro livro = new Livro();
-        livro.setIsbn("90902913-293103");
-        livro.setPreco(BigDecimal.valueOf(100));
-        livro.setGenero(GeneroLivro.FICCAO);
-        livro.setTitulo("UFO");
-        livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
+        livro.setIsbn("989012-111111");
+        livro.setPreco(BigDecimal.valueOf(180));
+        livro.setGenero(GeneroLivro.CIENCIA);
+        livro.setTitulo("Ciencia Humana");
+        livro.setDataPublicacao(LocalDate.of(1956, 5, 8));
 
         Autor autor = new Autor();
-        autor.setNome("João");
+        autor.setNome("Raul");
         autor.setNacionalidade("Brasileira");
-        autor.setDataNascimento(LocalDate.of(1969, 2, 20));
+        autor.setDataNascimento(LocalDate.of(1930, 10, 20));
 
         livro.setAutor(autor);
 
@@ -177,4 +177,14 @@ class LivroRepositoryTest {
         var resultado = livroRepository.findByGeneroPositionParameters(GeneroLivro.MISTERIO, "dataPublicacao");
         resultado.forEach(System.out::println);
     }
+
+    @Test
+    void deletePorGeneroTest() {
+        livroRepository.deleteByGenero(GeneroLivro.CIENCIA);
+    }
+
+//    @Test
+//    void updateDataPublicacaoTest() {
+//        livroRepository.updateDataPublicacao(LocalDate.of(2000,1,1));
+//    }
 }
