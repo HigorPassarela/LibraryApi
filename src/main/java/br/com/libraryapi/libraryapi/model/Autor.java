@@ -1,6 +1,7 @@
 package br.com.libraryapi.libraryapi.model;
 
 import jakarta.persistence.*;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,9 +25,11 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
-    @OneToMany(mappedBy = "autor")
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Livro> livros;
 
+
+    //Getters and Setters
     public Autor() {
     }
 
@@ -77,7 +80,7 @@ public class Autor {
                 ", nome='" + nome + '\'' +
                 ", dataNascimento=" + dataNascimento +
                 ", nacionalidade='" + nacionalidade + '\'' +
-                ", livros=" + livros +
+//                ", livros=" + livros +
                 '}';
     }
 }

@@ -2,6 +2,7 @@ package br.com.libraryapi.libraryapi.model;
 
 import br.com.libraryapi.libraryapi.model.enums.GeneroLivro;
 import jakarta.persistence.*;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -33,12 +34,15 @@ public class Livro {
     private BigDecimal preco;
 
     @JoinColumn(name = "id_autor")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Autor autor;
+//            (cascade = CascadeType.ALL)
 
     public Livro() {
     }
 
+
+    // Getter and Setter
     public UUID getId() {
         return id;
     }
@@ -104,7 +108,8 @@ public class Livro {
                 ", dataPublicacao=" + dataPublicacao +
                 ", genero=" + genero +
                 ", preco=" + preco +
-                ", autor=" + autor +
+//                ", autor=" + autor +
+                ", autor=" + autor + (autor != null ? autor.getNome() : null) + '\'' +
                 '}';
     }
 }

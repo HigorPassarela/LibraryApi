@@ -6,12 +6,16 @@ import br.com.libraryapi.libraryapi.model.enums.GeneroLivro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
+@Transactional
 class LivroRepositoryTest {
 
     @Autowired
@@ -27,12 +31,150 @@ class LivroRepositoryTest {
         livro.setPreco(BigDecimal.valueOf(100));
         livro.setGenero(GeneroLivro.FICCAO);
         livro.setTitulo("UFO");
-        livro.setDataPublicacao(LocalDate.of(1980,1,2));
+        livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
 
-        Autor autor = autorRepository.findById(UUID.fromString("91730da9-b9e4-4953-8efb-9ba9bb95bd53")).orElse(null);
+        Autor autor = autorRepository
+                .findById(UUID.fromString("91730da9-b9e4-4953-8efb-9ba9bb95bd53"))
+                .orElse(null);
 
         livro.setAutor(autor);
 
         livroRepository.save(livro);
+    }
+
+    @Test
+    void salvarAutorELivroTeste() {
+        Livro livro = new Livro();
+        livro.setIsbn("90902913-293103");
+        livro.setPreco(BigDecimal.valueOf(100));
+        livro.setGenero(GeneroLivro.FICCAO);
+        livro.setTitulo("Terceiro Livro");
+        livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
+
+        Autor autor = new Autor();
+        autor.setNome("Pedro");
+        autor.setNacionalidade("Brasileira");
+        autor.setDataNascimento(LocalDate.of(1969, 2, 20));
+
+        autorRepository.save(autor);
+
+        livro.setAutor(autor);
+
+        livroRepository.save(livro);
+    }
+
+    @Test
+    void salvarCascateTeste() {
+        Livro livro = new Livro();
+        livro.setIsbn("90902913-293103");
+        livro.setPreco(BigDecimal.valueOf(100));
+        livro.setGenero(GeneroLivro.FICCAO);
+        livro.setTitulo("UFO");
+        livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
+
+        Autor autor = new Autor();
+        autor.setNome("João");
+        autor.setNacionalidade("Brasileira");
+        autor.setDataNascimento(LocalDate.of(1969, 2, 20));
+
+        livro.setAutor(autor);
+
+        livroRepository.save(livro);
+    }
+
+    @Test
+    void atualizarAutorDoLivro() {
+        UUID id = UUID.fromString("a9db240d-0377-4620-84b7-e2981313642e");
+        var livroParaAtualizar = livroRepository.findById(id).orElse(null);
+
+        UUID idAutor = UUID.fromString("fad30683-94e5-4ea9-8905-274916a68c3c");
+        Autor autor = autorRepository.findById(idAutor).orElse(null);
+
+        livroParaAtualizar.setAutor(autor);
+
+        livroRepository.save(livroParaAtualizar);
+    }
+
+    @Test
+    void deletar() {
+        UUID id = UUID.fromString("a9db240d-0377-4620-84b7-e2981313642e");
+        livroRepository.deleteById(id);
+    }
+
+    @Test
+    void deletarCascate() {
+        UUID id = UUID.fromString("a9db240d-0377-4620-84b7-e2981313642e");
+        livroRepository.deleteById(id);
+    }
+
+    @Test
+    @Transactional
+    void buscarLivroTeste() {
+        UUID id = UUID.fromString("112022f0-2ce4-4f95-9562-6844a0bb480c");
+        Livro livro = livroRepository.findById(id).orElse(null);
+
+        System.out.println("Livro:");
+        System.out.println(livro.getTitulo());
+
+        System.out.println("Autor:");
+        System.out.println(livro.getAutor().getNome());
+    }
+
+    @Test
+    void pesquisaTituloTest() {
+        List<Livro> lista = livroRepository.findByTitulo("O Roubo da casa assombrada");
+        lista.forEach(System.out::println);
+
+    }
+
+    @Test
+    void pesquisaIsbnTest() {
+        List<Livro> lista = livroRepository.findByIsbn("90902913-293103");
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisaPorTituloEPrecoTest() {
+        var preco = BigDecimal.valueOf(204.00);
+
+        String tituloPesquisa = "O Roubo da casa assombrada";
+        List<Livro> lista = livroRepository.findByTituloAndPreco(tituloPesquisa, preco);
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    public void listarLivrosComQueryJPQL() {
+        var resultado = livroRepository.listarTodosOrdenadoPorTituloAndPreco();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    public void listarAutoresDosLivros() {
+        var resultado = livroRepository.listarAutoresDosLivros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    public void listarTitulosNaoRepetidosDosLivros() {
+        var resultado = livroRepository.listarNomesDiferentesLivros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    public void listarGenerosDeLivrosAutoresBrasileiros() {
+        var resultado = livroRepository.listarGenerosAutoresBasileiros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarPorGeneroQueryParamTest() {
+        var resultado = livroRepository.findByGenero(GeneroLivro.MISTERIO, "dataPublicacao");
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarPorGeneroPostionalParamTest() {
+        var resultado = livroRepository.findByGeneroPositionParameters(GeneroLivro.MISTERIO, "dataPublicacao");
+        resultado.forEach(System.out::println);
     }
 }
