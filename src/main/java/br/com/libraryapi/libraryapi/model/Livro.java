@@ -41,7 +41,6 @@ public class Livro {
     public Livro() {
     }
 
-
     // Getter and Setter
     public UUID getId() {
         return id;
