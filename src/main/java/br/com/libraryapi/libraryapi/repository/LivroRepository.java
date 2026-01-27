@@ -19,6 +19,8 @@ import java.util.UUID;
  */
 public interface LivroRepository extends JpaRepository<Livro, UUID> {
 
+    boolean existsByAutor(Autor autor);
+
     List<Livro> findByAutor(Autor autor);
 
     List<Livro> findByTitulo(String titulo);
@@ -62,8 +64,8 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     @Query("delete from Livro where genero = ?1")
     void deleteByGenero(GeneroLivro genero);
 
-//    @Modifying
-//    @Transactional
-//    @Query("update Livro set dataPublicacao")
-//    void updateDataPublicacao(LocalDate dataPublicacao);
+    @Modifying
+    @Transactional
+    @Query("update Livro set dataPublicacao = ?1")
+    void updateDataPublicacao(LocalDate dataPublicacao);
 }

@@ -1,0 +1,7 @@
+package br.com.libraryapi.libraryapi.controller.dto;
+
+public record ErroCampo(
+        String campo,
+        String erro
+) {
+}
