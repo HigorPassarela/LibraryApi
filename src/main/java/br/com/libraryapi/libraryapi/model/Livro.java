@@ -3,6 +3,7 @@ package br.com.libraryapi.libraryapi.model;
 import br.com.libraryapi.libraryapi.model.enums.GeneroLivro;
 import jakarta.persistence.*;
 import lombok.ToString;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "livro")
+@EntityListeners(AuditingEntityListener.class)
 public class Livro {
 
     @Id
